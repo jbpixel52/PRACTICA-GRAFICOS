@@ -1,0 +1,44 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+
+void
+main()
+{
+    gl_PointSize = 10.0;
+    gl_Position = vPosition;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+
+void
+main()
+{
+    gl_FragColor = vec4( 0.0, 0.5, 0.5, 1.0 );
+}
+</script>
+
+<script type="text/javascript" src="webgl-utils.js"></script>
+<script type="text/javascript" src="initShaders.js"></script>
+<script type="text/javascript" src="MV.js"></script>
+</head>   
+
+<body>
+
+    <div>
+        nada por ahora -> Intensidad de recursion  0 <input id="myslider" type="range"
+        min="0" max="9" step="1" value="0" />  9
+    </div>
+
+<script type="text/javascript" src="sierpinski.js"></script>
+<canvas id="gl-canvas" width="256" height="256">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+</html>
+
