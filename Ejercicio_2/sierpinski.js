@@ -3,7 +3,7 @@ var gl;
 
 var points = [];
 
-var numTimesToSubdivide = 2;
+var numTimesToSubdivide = 0;
 
 //////Cuadrado de referencia
 //  A----------B
@@ -16,6 +16,7 @@ var numTimesToSubdivide = 2;
 
 function divideSquare(count, a, b, c, d) 
 {
+    //(d[1]-b[1])debugger;
     //Definir puntos
     //Top line
     var delta = b[0]-a[0];
@@ -26,12 +27,12 @@ function divideSquare(count, a, b, c, d)
     var abb = vec2((a[0]+delta*2),a[1]);
     var b = b;
     //2nd line
-    var aac = vec2(a[0],1-delta);
+    var aac = vec2(a[0],(b[1])-delta);
     var aw = vec2(aab[0],aac[1]);
     var bx = vec2(abb[0],aac[1]);
     var bbd = vec2(b[0], aac[1]);
     //3rd line
-    var acc = vec2(a[0],1-delta*2);
+    var acc = vec2(a[0],(b[1])-delta*2);
     var cy = vec2(aab[0],acc[1]);
     var dz = vec2(abb[0],acc[1]);
     var bdd = vec2(b[0],acc[1]);
@@ -43,6 +44,7 @@ function divideSquare(count, a, b, c, d)
     
     if (count == 0) 
     {
+        
         //Puntos listos
         //Upper block
         points.push(a);
@@ -77,13 +79,17 @@ function divideSquare(count, a, b, c, d)
     {
         //console.log(points);
         --count;
-        divideSquare(count,aac,cy,c,ccd);
+        //console.log(aac,cy,c,ccd);
+        //debugger;
+        //Hacerlo en otro orden se ve mal
+        divideSquare(count,a,aab,aac,aw);
+        divideSquare(count,aab,abb,aw,bx);
+        divideSquare(count,abb,b,bx,bbd);
+        divideSquare(count,bx,bbd,dz,bdd);
+        divideSquare(count,aac,aw,acc,cy);
+        divideSquare(count,acc,cy,c,ccd);
         divideSquare(count,cy,dz,ccd,cdd);
         divideSquare(count,dz,bdd,cdd,d);
-        
-        
-        
-       
     }
 }
 
