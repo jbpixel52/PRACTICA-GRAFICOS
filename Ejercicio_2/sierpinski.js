@@ -100,6 +100,8 @@ function init() {
         //console.log(numTimesToSubdivide);
     };
     canvas = document.getElementById("gl-canvas");
+	canvas.width = window.innerWidth * 0.85;
+    canvas.height = window.innerHeight * 0.85;
     gl = WebGLUtils.setupWebGL(canvas);
     if (!gl) { alert("WebGL isn't available"); }
 
@@ -110,7 +112,7 @@ function init() {
     var b = vec2(1 , 1);
     if(numTimesToSubdivide>=1)
     {
-        divideSquare(numTimesToSubdivide-1, a,b,c,d,program);
+        divideSquare(numTimesToSubdivide-1, a,b,c,d);
     }
     else
     {
