@@ -28,30 +28,44 @@ function onDocumentKeyDown(event)
     console.log(keycode);
     switch(keycode)
     {
-        case 37:
-        cubeCentral.rotation.z -= 3.14/180;
+        case 16: //Shift
+            camera.translateY(0.25);
+            camera.lookAt(cubeCentral.position);
         break;
-        case 38:
-        cubeCentral.rotation.x -= 3.14/180;
+        case 17: // Control
+            camera.translateY(-0.25);
+            camera.lookAt(cubeCentral.position);           
         break;
-        case 39:
-        cubeCentral.rotation.z += 3.14/180;
+        case 38: //Abajo flecha
+            camera.translateZ(1);
+            camera.lookAt(cubeCentral.position);
         break;
-        case 40 :
-        cubeCentral.rotation.x += 3.14/180;
-        console.log(camera.rotation);
+        case 39: //Derecha felcha
+            camera.translateX(-1);
+            camera.translateZ(-0.2);
+            camera.lookAt(cubeCentral.position);
         break;
+        case 40: //Arriba felcha
+            camera.translateZ(-1);
+            camera.lookAt(cubeCentral.position);
+        break;
+        case 37: //Izquierda flecha
+            camera.translateX(1);
+            camera.translateZ(-0.2);
+            camera.lookAt(cubeCentral.position);
+        break;
+        //POR COPIPASTEAR
         case 65 : //left arrow 向左箭头
-        cubeCentral.rotation.z -= 3.14/180;
+        camera.rotation.z -= 3.14/180;
         break;
         case 87 : // up arrow 向上箭头
-        cubeCentral.rotation.x -= 3.14/180;
+        camera.rotation.x -= 3.14/180;
         break;
         case 68 : // right arrow 向右箭头
-        cubeCentral.rotation.z += 3.14/180;
+        camera.rotation.z += 3.14/180;
         break;
         case 83 : //down arrow向下箭头
-        cubeCentral.rotation.x += 3.14/180;
+        camera.rotation.x += 3.14/180;
         break;
     }
     //document.addEventListener('keyup',onDocumentKeyUp,false);
