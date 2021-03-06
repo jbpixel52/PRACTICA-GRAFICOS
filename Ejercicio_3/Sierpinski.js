@@ -7,37 +7,22 @@ scene.background = new THREE.Color( 0x220000 );
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-const light = new THREE.AmbientLight( 0x404040 ); // soft white light
-//scene.add( light );
-
 var grid = new THREE.GridHelper(30, 30, 0xffffff, 0x404040);
-grid.rotation.x = Math.PI * 0.5;
 scene.add(grid);
 
-const geometry = new THREE.BoxGeometry(1/10,1/10,1/10);
+const geometry = new THREE.BoxGeometry(1/15,1/15,1/15);
 const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 const cubeCentral = new THREE.Mesh( geometry, material );
 scene.add( cubeCentral );
-
-cubeCentral.position.x += 0;
-
 
 camera.position.z = 6;
 
 document.addEventListener('keydown',onDocumentKeyDown);
 
-function RNG(min, max)
-{
-    return Math.floor(Math.random() * (max - min) ) + min;
-}
-
-
 function onDocumentKeyDown(event)
 {
-    //var delta = 3.14/180;
     event = event || window.event;
     var keycode = event.keyCode;
-    //console.log(keycode);
     switch(keycode)
     {
         case 16: //Shift
@@ -48,47 +33,83 @@ function onDocumentKeyDown(event)
             camera.translateY(-0.25);
             camera.lookAt(cubeCentral.position);           
         break;
-        case 38: //Abajo flecha
+        case 40: //Abajo flecha
             camera.translateZ(1);
             camera.lookAt(cubeCentral.position);
         break;
-        case 39: //Derecha felcha
+        case 37: //Derecha felcha
             camera.translateX(-1);
-            camera.translateZ(-0.2);
+            camera.translateZ(-0.11);
             camera.lookAt(cubeCentral.position);
         break;
-        case 40: //Arriba felcha
+        case 38: //Arriba felcha
             camera.translateZ(-1);
             camera.lookAt(cubeCentral.position);
         break;
-        case 37: //Izquierda flecha
+        case 39: //Izquierda flecha
             camera.translateX(1);
-            camera.translateZ(-0.2);
+            camera.translateZ(-0.11);
             camera.lookAt(cubeCentral.position);
         break;
         //POR COPIPASTEAR
-        case 65 : //left arrow 向左箭头
+        case 65 : //A key
             camera.rotation.z -= 3.14/180;
         break;
-        case 87 : // up arrow 向上箭头
-            camera.rotation.x += 3.14/180;
+        case 87 : // W key 
+            camera.translateY(0.245);
+            camera.lookAt(cubeCentral.position);
         break;
-        case 68 : // right arrow 向右箭头
+        case 68 : // D Key 
             camera.rotation.z += 3.14/180;
         break;
-        case 83 : //down arrow向下箭头
-            camera.rotation.x -= 3.14/180;
+        case 83 : // S key
+            camera.translateY(-0.245);
+            camera.lookAt(cubeCentral.position); 
         break;
     }
 }
-var a,b,c,d = 0;
-var numTimesToSubdivide = 1;
+var numTimesToSubdivide = 3; //>3  requiere  más de 24 GB de RAM, los cuales no tengo D:
+var expectedCubes = Math.pow(20,numTimesToSubdivide);
+var iteracion = 1;
 
-function divideCube(count)
+function divideCube(count,originPoint)
 {
+    var puntos = [];
+    var relDelta= 1/Math.pow(3,iteracion-1)
+                -(1/Math.pow(3,iteracion));
+    for (var h =0; h <27;h++)
+    {
+        puntos.push(new THREE.Vector3(0,0,0));
+    }
+    puntos[0]  = new THREE.Vector3 (relDelta+originPoint.x,0+originPoint.y,0+originPoint.z);
+    puntos[1]  = new THREE.Vector3 (0+originPoint.x,0+originPoint.y,0+originPoint.z);
+    puntos[2]  = new THREE.Vector3 (-relDelta+originPoint.x,0+originPoint.y,0+originPoint.z);
+    puntos[3]  = new THREE.Vector3 (relDelta+originPoint.x,relDelta+originPoint.y,0+originPoint.z);
+    puntos[4]  = new THREE.Vector3 (0+originPoint.x,relDelta+originPoint.y,0+originPoint.z);
+    puntos[5]  = new THREE.Vector3 (-relDelta+originPoint.x,relDelta+originPoint.y,0+originPoint.z);
+    puntos[6]  = new THREE.Vector3 (relDelta+originPoint.x,-relDelta+originPoint.y,0+originPoint.z);
+    puntos[7]  = new THREE.Vector3 (0+originPoint.x,-relDelta+originPoint.y,0+originPoint.z);
+    puntos[8]  = new THREE.Vector3 (-relDelta+originPoint.x,-relDelta+originPoint.y,0+originPoint.z);
+    puntos[9]  = new THREE.Vector3 (relDelta+originPoint.x,0+originPoint.y,-relDelta+originPoint.z);
+    puntos[10]  = new THREE.Vector3 (0+originPoint.x,0+originPoint.y,-relDelta+originPoint.y);
+    puntos[11]  = new THREE.Vector3 (-relDelta+originPoint.x,0+originPoint.y,-relDelta+originPoint.z);
+    puntos[12]  = new THREE.Vector3 (relDelta+originPoint.x,relDelta+originPoint.y,-relDelta+originPoint.z);
+    puntos[13]  = new THREE.Vector3 (0+originPoint.x,relDelta+originPoint.y,-relDelta+originPoint.z);
+    puntos[14]  = new THREE.Vector3 (-relDelta+originPoint.x,relDelta+originPoint.y,-relDelta+originPoint.z);
+    puntos[15]  = new THREE.Vector3 (relDelta+originPoint.x,-relDelta+originPoint.y,-relDelta+originPoint.z);
+    puntos[16]  = new THREE.Vector3 (0+originPoint.x,-relDelta+originPoint.y,-relDelta+originPoint.z);
+    puntos[17]  = new THREE.Vector3 (-relDelta+originPoint.x,-relDelta+originPoint.y,-relDelta+originPoint.z);
+    puntos[18]  = new THREE.Vector3 (relDelta+originPoint.x,0+originPoint.y,relDelta+originPoint.z);
+    puntos[19]  = new THREE.Vector3 (0+originPoint.x,0+originPoint.y,relDelta+originPoint.z);
+    puntos[20]  = new THREE.Vector3 (-relDelta+originPoint.x,0+originPoint.y,relDelta+originPoint.z);
+    puntos[21]  = new THREE.Vector3 (relDelta+originPoint.x,relDelta+originPoint.y,relDelta+originPoint.z);
+    puntos[22]  = new THREE.Vector3 (0+originPoint.x,relDelta+originPoint.y,relDelta+originPoint.z);
+    puntos[23]  = new THREE.Vector3 (-relDelta+originPoint.x,relDelta+originPoint.y,relDelta+originPoint.z);
+    puntos[24]  = new THREE.Vector3 (relDelta+originPoint.x,-relDelta+originPoint.y,relDelta+originPoint.z);
+    puntos[25]  = new THREE.Vector3 (0+originPoint.x,-relDelta+originPoint.y,relDelta+originPoint.z);
+    puntos[26]  = new THREE.Vector3 (-relDelta+originPoint.x,-relDelta+originPoint.y,relDelta+originPoint.z); 
     if (count == 0) 
     {
-        //Hardcodear la iteracion 1, las demas no
         for(var i = 0; i < 3; i++)
         {
             for(var j = 0; j < 9; j++)
@@ -97,75 +118,54 @@ function divideCube(count)
                     2/Math.pow(3,numTimesToSubdivide),
                     2/Math.pow(3,numTimesToSubdivide),
                     2/Math.pow(3,numTimesToSubdivide));
-                //var mat = new THREE.MeshBasicMaterial();
                 cubitos.push(new THREE.Mesh(geo,new THREE.MeshBasicMaterial()));
             }
         }
         for(var l =0; l <27; l++)
         {
             scene.add(cubitos[l]);
+            cubitos[l].position.set(puntos[l].x,puntos[l].y,puntos[l].z);
             cubitos[l].material.color.set(new THREE.Color(Math.random(),Math.random(),Math.random()))
         }
-
-        console.log(cubitos[0].geometry.width);
-        var deltaTemp = 1-(1/3); 
-        cubitos[0].position.set(deltaTemp,0,0);
-        cubitos[1].position.set(0,0,0);
-        cubitos[2].position.set(-deltaTemp,0,0);
-        cubitos[3].position.set(deltaTemp,deltaTemp,0);
-        cubitos[4].position.set(0,deltaTemp,0);
-        cubitos[5].position.set(-deltaTemp,deltaTemp,0);
-        cubitos[6].position.set(deltaTemp,-deltaTemp,0);
-        cubitos[7].position.set(0,-deltaTemp,0);
-        cubitos[8].position.set(-deltaTemp,-deltaTemp,0);
-        scene.remove(cubitos[1]);
         scene.remove(cubitos[0]);
+        scene.remove(cubitos[1]);
         scene.remove(cubitos[2]);
         scene.remove(cubitos[4]);
         scene.remove(cubitos[7]);
-        ////
-        cubitos[9].position.set(deltaTemp,0,-deltaTemp);
-        cubitos[10].position.set(0,0,-deltaTemp);
-        cubitos[11].position.set(-deltaTemp,0,-deltaTemp);
-        cubitos[12].position.set(deltaTemp,deltaTemp,-deltaTemp);
-        cubitos[13].position.set(0,deltaTemp,-deltaTemp);
-        cubitos[14].position.set(-deltaTemp,deltaTemp,-deltaTemp);
-        cubitos[15].position.set(deltaTemp,-deltaTemp,-deltaTemp);
-        cubitos[16].position.set(0,-deltaTemp,-deltaTemp);
-        cubitos[17].position.set(-deltaTemp,-deltaTemp,-deltaTemp);
         scene.remove(cubitos[10]);
-        ////
-        cubitos[18].position.set(deltaTemp,0,deltaTemp);
-        cubitos[19].position.set(0,0,deltaTemp);
-        cubitos[20].position.set(-deltaTemp,0,deltaTemp);
-        cubitos[21].position.set(deltaTemp,deltaTemp,deltaTemp);
-        cubitos[22].position.set(0,deltaTemp,deltaTemp);
-        cubitos[23].position.set(-deltaTemp,deltaTemp,deltaTemp);
-        cubitos[24].position.set(deltaTemp,-deltaTemp,deltaTemp);
-        cubitos[25].position.set(0,-deltaTemp,deltaTemp);
-        cubitos[26].position.set(-deltaTemp,-deltaTemp,deltaTemp); 
-        scene.remove(cubitos[19]);       
+        scene.remove(cubitos[19]); 
+        cubitos=[];      
     }
     else 
     {
-        //console.log(points);
         --count;
-        //console.log(aac,cy,c,ccd);
-        //debugger;
-        //Hacerlo en otro orden se ve mal
-        // divideSquare(count,a,aab,aac,aw);
-        // divideSquare(count,aab,abb,aw,bx);
-        // divideSquare(count,abb,b,bx,bbd);
-        // divideSquare(count,bx,bbd,dz,bdd);
-        // divideSquare(count,aac,aw,acc,cy);
-        // divideSquare(count,acc,cy,c,ccd);
-        // divideSquare(count,cy,dz,ccd,cdd);
-        // divideSquare(count,dz,bdd,cdd,d);
+        iteracion++;
+        divideCube(count,puntos[3]);
+        divideCube(count,puntos[5]);
+        divideCube(count,puntos[6]);
+        divideCube(count,puntos[8]);
+        divideCube(count,puntos[9]);
+        divideCube(count,puntos[11]);
+        divideCube(count,puntos[12]);
+        divideCube(count,puntos[13]);
+        divideCube(count,puntos[14]);
+        divideCube(count,puntos[15]);
+        divideCube(count,puntos[16]);
+        divideCube(count,puntos[17]);
+        divideCube(count,puntos[18]);
+        divideCube(count,puntos[20]);
+        divideCube(count,puntos[21]);
+        divideCube(count,puntos[22]);
+        divideCube(count,puntos[23]);
+        divideCube(count,puntos[24]);
+        divideCube(count,puntos[25]);
+        divideCube(count,puntos[26]);
+        iteracion--; 
     }
 }
 if(numTimesToSubdivide>=1)
 {
-    divideCube(numTimesToSubdivide-1);
+    divideCube(numTimesToSubdivide-1,new THREE.Vector3(0,0,0));
 }
 else
 {
@@ -175,7 +175,8 @@ else
 }
 
 
-const animate = function () {
+const animate = function () 
+{
     requestAnimationFrame( animate );
 
     //cube.rotation.x += 0.01;
